@@ -7,9 +7,18 @@ void result_fun();//计算合理出牌
 int major[37];//麻将山
 int major_player[4][37];//四家打出牌张数
 int major_mosha[4][37];//四家副露
-int my_mosha[13];//自家手牌
 int card;//当前操作的牌张
 int isme=0;//判断是否是自己操作
+QString tiao,tong,wan,zi;
+typedef  struct
+{
+    int shunzi=5;
+    int pengzi=5;
+    int quetou=3;
+    int kanzhang=2;
+    int qianzhang=2;
+
+}card_score;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -116,60 +125,32 @@ void MainWindow::table_init()
 
 void result_fun()//计算合理出牌
 {
-    int i=0,menqianqing=1,tiaoi=0,tongi=0,wani=0,zii=0;
-    int tiao[14],wan[14],tong[14],zi[14];
-    for(i=0;i<13;i++)
+    int i;
+    QString mosha;
+    if((tiao.length()!=0)&&(tiao.length()!=14))//条
     {
-        if(my_mosha[i]>=37)
+        //不打条子
+        for(i=0;i<9;i++)
         {
-            menqianqing=0;//不是门前清状态
+            mosha=tiao+('1'+i);
         }
-        else if((my_mosha[i]<10))//条牌整理
-        {
-            if(my_mosha[i]<=4)
-            {
-                tiao[tiaoi]=my_mosha[i]+1;
-            }
-            else if(my_mosha[i]>=5)
-            {
-                tiao[tiaoi]=my_mosha[i];
-            }
-            tiaoi++;
-        }
-        else if((my_mosha[i]<20))//筒牌处理
-        {
-            if(my_mosha[i]<=14)
-            {
-                tong[tongi]=my_mosha[i]-9;
-            }
-            else if(my_mosha[i]>=15)
-            {
-                tong[tongi]=my_mosha[i]-10;
-            }
-            tongi++;
-        }
-        else if((my_mosha[i]<30))//万牌处理
-        {
-            if(my_mosha[i]<=24)
-            {
-                wan[wani]=my_mosha[i]-19;
-            }
-            else if(my_mosha[i]>=25)
-            {
-                wan[wani]=my_mosha[i]-20;
-            }
-            wani++;
-        }
-        else if((my_mosha[i]<37))//字牌处理
-        {
-            zi[zii]=my_mosha[i]-29;
-            zii++;
-        }
+        //打条子
     }
-    qDebug()<<tiao<<endl;
-    qDebug()<<tong<<endl;
-    qDebug()<<wan<<endl;
-    qDebug()<<zii<<endl;
+    if((tong.length()!=0)&&(tong.length()!=14))//筒
+    {
+        //不打筒子
+        //打筒子
+    }
+    if((wan.length()!=0)&&(wan.length()!=14))//万
+    {
+        //不打万字
+        //打万字
+    }
+    if((zi.length()!=0)&&(zi.length()!=14))//字
+    {
+        //不打字牌
+        //打字牌
+    }
 }
 
 void major_init()//麻将山初始化
@@ -177,10 +158,6 @@ void major_init()//麻将山初始化
     int i,j;
     for(i=0;i<37;i++)//初始化麻将山
     {
-        if(i<14)
-        {
-            my_mosha[i]=37;
-        }
         if(i<30&&i%10==4)
         {
             major[i]=1;
@@ -308,22 +285,12 @@ void MainWindow::radio_button_fun()//radio_button信息处理
     }
     else if(ui->radioButton_8->isChecked())
     {
-        int i;
-        QString card_text;
         qDebug()<<"手牌"<<endl;
-        for(i=0;i<13;i++)
-        {
-            if(ui->tableWidget->item(0,i)==nullptr || ui->tableWidget->item(0,i)->text().isEmpty())
-            {
-                continue;
-            }
-            else
-            {
-                card_text = ui->tableWidget->item(0,i)->text();
-                my_mosha[i]=card_text.toInt();
-            }
-        }
-//        result_fun();
+        tiao=ui->lineEdit->displayText();
+        tong=ui->lineEdit_2->displayText();
+        wan=ui->lineEdit_3->displayText();
+        zi=ui->lineEdit_4->displayText();
+        result_fun();
     }
     else if(ui->radioButton_9->isChecked())
     {
