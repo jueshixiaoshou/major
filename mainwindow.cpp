@@ -4,6 +4,7 @@ void major_init();//麻将山初始化
 void red_5_check();//查看赤宝牌张数是否为负数
 void table_init();//表格初始化
 void result_fun();//计算合理出牌
+void mosha_evaluate();//手牌评估函数
 int major[37];//麻将山
 int major_player[4][37];//四家打出牌张数
 int major_mosha[4][37];//四家副露
@@ -123,6 +124,33 @@ void MainWindow::table_init()
 
 }
 
+void generateRandomNumber()
+{
+    qsrand(1);//种子一样，生成的随机数一样
+    for(int i=0; i<10; i++)
+    {
+        int test =qrand()%37;
+        qDebug()<<test;
+    }
+}
+
+void mosha_evaluate(QString mosha)
+{
+    int i,j,mosha_num[9]={0};
+    QString num="123456789";
+    for(j=0;j<mosha.length();j++)
+    {
+        for(i=0;i<9;i++)
+        {
+            if(num[i]==mosha[j])
+            {
+                mosha_num[i]++;
+                break;
+            }
+        }
+    }
+}
+
 void result_fun()//计算合理出牌
 {
     int i;
@@ -133,6 +161,7 @@ void result_fun()//计算合理出牌
         for(i=0;i<9;i++)
         {
             mosha=tiao+('1'+i);
+            mosha_evaluate(mosha);
         }
         //打条子
     }
