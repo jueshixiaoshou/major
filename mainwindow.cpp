@@ -10,6 +10,7 @@ int major_player[4][37];//四家打出牌张数
 int major_mosha[4][37];//四家副露
 int card;//当前操作的牌张
 int isme=0;//判断是否是自己操作
+int v_card[10000000];
 QString tiao,tong,wan,zi;
 typedef  struct
 {
@@ -124,14 +125,29 @@ void MainWindow::table_init()
 
 }
 
-void generateRandomNumber()
+void generateRandomNumber_test()//训练函数
 {
-    qsrand(1);//种子一样，生成的随机数一样
-    for(int i=0; i<10; i++)
+    QFile f("D:/project/qt/major/doc/data.txt");
+    if(!f.open(QIODevice::ReadWrite | QIODevice::Text))
     {
-        int test =qrand()%37;
-        qDebug()<<test;
+        qDebug() << "Open failed." << endl;
+        return ;
     }
+
+    QTextStream txtInput(&f);
+    QString lineStr[200000];
+    int line=0;//行数
+    qsrand(1);//种子一样，生成的随机数一样
+    for(int i=0; i<10000000; i++)//一个种子我们训练约10000000次
+    {
+        v_card[i]=(qrand()%9)+1;
+    }
+    while(!txtInput.atEnd())
+    {
+        line++;
+        lineStr[line] = txtInput.readLine();
+    }
+    f.close();
 }
 
 void mosha_evaluate(QString mosha)
@@ -155,30 +171,23 @@ void result_fun()//计算合理出牌
 {
     int i;
     QString mosha;
+    generateRandomNumber_test();
     if((tiao.length()!=0)&&(tiao.length()!=14))//条
     {
-        //不打条子
-        for(i=0;i<9;i++)
-        {
             mosha=tiao+('1'+i);
             mosha_evaluate(mosha);
-        }
-        //打条子
     }
     if((tong.length()!=0)&&(tong.length()!=14))//筒
     {
-        //不打筒子
-        //打筒子
+
     }
     if((wan.length()!=0)&&(wan.length()!=14))//万
     {
-        //不打万字
-        //打万字
+
     }
     if((zi.length()!=0)&&(zi.length()!=14))//字
     {
-        //不打字牌
-        //打字牌
+
     }
 }
 
