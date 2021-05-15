@@ -127,7 +127,7 @@ void MainWindow::table_init()
 
 void generateRandomNumber_test()//训练函数
 {
-    QFile f("D:/project/qt/major/doc/data.txt");
+    QFile f("D:/project/qt/major/major/doc/data1.txt");
     if(!f.open(QIODevice::ReadWrite | QIODevice::Text))
     {
         qDebug() << "Open failed." << endl;
