@@ -11,7 +11,8 @@ int major_mosha[4][37];//四家副露
 int card;//当前操作的牌张
 int isme=0;//判断是否是自己操作
 int v_card[10000000];
-QString tiao,tong,wan,zi;
+int score[9]={};
+QImage image;
 typedef  struct
 {
     int shunzi=5;
@@ -125,65 +126,14 @@ void MainWindow::table_init()
 
 }
 
-void generateRandomNumber_test()//训练函数
-{
-    QFile f("D:/project/qt/major/major/doc/data1.txt");
-    if(!f.open(QIODevice::ReadWrite | QIODevice::Text))
-    {
-        qDebug() << "Open failed." << endl;
-        return ;
-    }
-
-    QTextStream txtInput(&f);
-    QString lineStr[200000];
-    int line=0;//行数
-    while(!txtInput.atEnd())
-    {
-        line++;
-        lineStr[line] = txtInput.readLine();
-    }
-    f.close();
-}
-
 void mosha_evaluate(QString mosha)
 {
-    int i,j,mosha_num[9]={0};
-    QString num="123456789";
-    for(j=0;j<mosha.length();j++)
-    {
-        for(i=0;i<9;i++)
-        {
-            if(num[i]==mosha[j])
-            {
-                mosha_num[i]++;
-                break;
-            }
-        }
-    }
+
 }
 
 void result_fun()//计算合理出牌
 {
-    int i=0;
-    QString mosha;
-    generateRandomNumber_test();
-    if((tiao.length()!=0)&&(tiao.length()!=14))//条
-    {
-            mosha=tiao+('1'+i);
-            mosha_evaluate(mosha);
-    }
-    if((tong.length()!=0)&&(tong.length()!=14))//筒
-    {
 
-    }
-    if((wan.length()!=0)&&(wan.length()!=14))//万
-    {
-
-    }
-    if((zi.length()!=0)&&(zi.length()!=14))//字
-    {
-
-    }
 }
 
 void major_init()//麻将山初始化
@@ -319,10 +269,10 @@ void MainWindow::radio_button_fun()//radio_button信息处理
     else if(ui->radioButton_8->isChecked())
     {
         qDebug()<<"手牌"<<endl;
-        tiao=ui->lineEdit->displayText();
-        tong=ui->lineEdit_2->displayText();
-        wan=ui->lineEdit_3->displayText();
-        zi=ui->lineEdit_4->displayText();
+        image.load( "D:/project/qt/major/major/test.jpg" );
+         QImage grey_image=image.convertToFormat(QImage::Format_Grayscale8);
+         grey_image.save("D:/project/qt/major/major/grey_image.jpg");
+         qDebug()<<image<<endl;
         result_fun();
     }
     else if(ui->radioButton_9->isChecked())
