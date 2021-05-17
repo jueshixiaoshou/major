@@ -269,10 +269,10 @@ void MainWindow::radio_button_fun()//radio_button信息处理
     else if(ui->radioButton_8->isChecked())
     {
         qDebug()<<"手牌"<<endl;
-        image.load( "D:/project/qt/major/major/test.jpg" );
-         QImage grey_image=image.convertToFormat(QImage::Format_Grayscale8);
-         grey_image.save("D:/project/qt/major/major/grey_image.jpg");
-         qDebug()<<image<<endl;
+//        image.load( "D:/project/qt/major/major/test.jpg" );
+//         QImage grey_image=image.convertToFormat(QImage::Format_Grayscale8);
+//         grey_image.save("D:/project/qt/major/major/grey_image.jpg");
+//         qDebug()<<image<<endl;
         result_fun();
     }
     else if(ui->radioButton_9->isChecked())
