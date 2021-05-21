@@ -4,7 +4,7 @@ import os
 import threading
 from PIL import ImageTk
 import glob as gb
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw,ImageGrab
 import matplotlib.pyplot as plt
 import PIL
 import time
@@ -52,11 +52,12 @@ mahjong=['1m','2m','3m','4m','5m','6m','7m','8m','9m',
          '1s','2s','3s','4s','5s','6s','7s','8s','9s',
          '1z','2z','3z','4z','5z','6z','7z']
 mahjong_re=[[0 for x in range(34)] for y in range(4)]
-mahjong_ju=[[0 for x in range(15)] for y in range(34)]
+mahjong_ju=[[0 for x in range(54)] for y in range(34)]
 mahjong_path='.\pic\*.png'
 card_width=60
-card_height=100
-threshold = 170
+card_height=90
+threshold = 200
+plot=[]
 table = []
 for i in range(256):
     if i < threshold:
@@ -64,50 +65,58 @@ for i in range(256):
     else:
         table.append(1)
 def card_find(img_card,plot_x,plot_y):
-    list=[0 for x in range(15)]
+    list=[0 for x in range(54)]
     img_card = img_card.convert('L')
     # img_card = img_card.point(table, '1')
-    for x_card in range(0, 3):
-        for y_card in range(0, 5):
+    for x_card in range(0, 6):
+        for y_card in range(0, 9):
             for z_card in range(0, 100):
                 if img_card.getpixel((plot_x+x_card * 10 + (z_card / 10), plot_y+y_card * 10 + (z_card % 10)))>threshold:
                     list[x_card*5+y_card]+=1
     return list
 def mahjong_get():
-    i=0
-    sam=0#相似性
-    sam_max=0
-    dif_max=100
-    dif=0
+    sum=0
     # img_display = PIL.ImageGrab.grab()
+    # img_display.save('test.jpg')
     img_display = PIL.Image.open('test.jpg')
+    # img_card = img_display.convert('L')
+    # img_card = img_card.point(table, '1')
+    # img_card.show()
+    # return
     width= img_display.width
     height= img_display.height
     print(width,height)
-    for x in range(0,(int(width/30)-1)):
-        for y in range(0,(int(height/50)-1)):
-            card_org=card_find(img_display,x*30,y*50)
-            if card_org.count(0)<5:
-                print("这可能是是一张麻将牌")
-                card_pro=img_display.crop((x*30,y*50,x*30+card_width,y*50+card_height))
-                card_pro.save("test.png")
+    for x in range(0,int((width-card_width)/40)):
+        x *=40
+        print(x)
+        for y in range(0,int((height-card_height)/40)):
+            # card_pro = img_display.crop((x , y , x+card_width, y + card_height))
+            # dst = os.path.join('D:/pic/',  format(str(x*(height-card_height)+y), '0>3s') + '.jpg')
+            # card_pro.save(dst)
+            y *= 40
+            card_org=card_find(img_display,x,y)
+            if card_org.count(0)<25:
+                print("这可能是是一张麻将牌",x,y)
+                plot.append((x,y))
                 i=0
                 sam = 0  # 相似性
                 sam_max = 0
                 dif_max = 100
                 dif = 0
                 print(card_org)
-                print(x*30,y*50)
+                print(x,y)
                 check_path=os.path.abspath(mahjong_path)
                 img_path = gb.glob(check_path)
                 for check_path in img_path:
                     img_card = PIL.Image.open(check_path)
+                    # img_card=img_card.resize((60,90))
+                    # img_card.save(check_path)
                     mahjong_ju[i]=card_find(img_card,0,0)
-                    for x in range(0, 15):
-                        if abs((mahjong_ju[i][x]-card_org[x]))<=3:
+                    for k in range(0, 54):
+                        if abs((mahjong_ju[i][k]-card_org[k]))<=3:
                             sam+=1
-                        elif abs((mahjong_ju[i][x] - card_org[x])) >10:
-                            dif+=(abs((mahjong_ju[i][x] - card_org[x]))/10)
+                        elif abs((mahjong_ju[i][k] - card_org[k])) >10:
+                            dif+=(abs((mahjong_ju[i][k] - card_org[k]))/10)
                     if sam>dif:
                         sam=sam-dif
                     else:
@@ -124,6 +133,12 @@ def mahjong_get():
                     print(sam_max)
                     PIL.ImageDraw.Draw(img_display).rectangle((x*30,y*50,x*30+card_width,y*50+card_height), outline='black', width=3)
                     img_display.show()
+    # PIL.ImageDraw.Draw(img_display).rectangle((x * 30, y * 50, x * 30 + card_width, y * 50 + card_height),
+    #                                           outline='black', width=3)
+    print(plot)
+    for (x,y) in plot:
+        PIL.ImageDraw.Draw(img_display).rectangle((x, y , x + card_width, y + card_height),outline='black', width=3)
+    img_display.show()
 
 def mahjong_analysis():
     pass
